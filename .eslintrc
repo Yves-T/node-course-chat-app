@@ -1,0 +1,21 @@
+{
+  "extends": ["airbnb"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": [1, { "argsIgnorePattern": "next" }],
+    "no-undef": "error",
+    "func-names": 0,
+    "space-before-function-paren": 0,
+    "no-underscore-dangle": 0
+  }
+}
