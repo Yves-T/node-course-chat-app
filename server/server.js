@@ -6,6 +6,6 @@ const app = express();
 
 app.use(express.static(publicPath));
 
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log(`App listening on port ${port}!`);
 });
