@@ -15,9 +15,12 @@
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "^8.0.2",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "prettier-eslint": "^8.2.2"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
   }
 }
