@@ -49,7 +49,9 @@ formSubmit$.subscribe(e => {
       from: 'User',
       text: inputMessage.value,
     },
-    () => {},
+    () => {
+      inputMessage.value = '';
+    },
   );
 });
 
@@ -58,13 +60,21 @@ locationClicked$.subscribe(e => {
   if (!navigator.geolocation) {
     return alert('Geolocation not supported by your browser');
   }
+  locationBtn.setAttribute('disabled', 'disabled');
+  locationBtn.innerHTML = 'Sending location...';
+
   navigator.geolocation.getCurrentPosition(
     position => {
+      locationBtn.removeAttribute('disabled');
+      locationBtn.innerHTML = 'Send location';
       socket.emit('createLocationMessage', {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       });
     },
-    () => alert('Unable to fetch location'),
+    () => {
+      locationBtn.removeAttribute('disabled');
+      alert('Unable to fetch location');
+    },
   );
 });
