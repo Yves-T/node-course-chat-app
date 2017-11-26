@@ -14,7 +14,8 @@
   },
   "globals": {
     "Rx": true,
-    "moment": true
+    "moment": true,
+    "Mustache": true
   },
   "rules": {
     "no-unused-vars": [1, { "argsIgnorePattern": "next" }],

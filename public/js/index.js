@@ -3,6 +3,8 @@ const form = document.querySelector('#message-form');
 const inputMessage = document.querySelector('[name=message]');
 const messages = document.querySelector('#messages');
 const locationBtn = document.querySelector('#send-location');
+const template = document.querySelector('#message-template');
+const locationTemplate = document.querySelector('#location-message-template');
 
 socket.on('connect', () => {
   console.log('connected to server');
@@ -13,29 +15,35 @@ socket.on('disconnect', () => {
 });
 
 socket.on('newMessage', message => {
-  console.log('new message', message);
   const formattedTime = moment(message.createdAt).format('h:mm a');
-  const li = document.createElement('li');
-  const newContent = document.createTextNode(
-    `${message.from} : ${formattedTime}`,
-  );
-  li.appendChild(newContent);
-  messages.appendChild(li);
+  const html = Mustache.render(template.innerHTML, {
+    text: message.text,
+    from: message.from,
+    createdAt: formattedTime,
+  });
+  messages.innerHTML = html;
 });
 
 socket.on('newLocationMessage', message => {
   const formattedTime = moment(message.createdAt).format('h:mm a');
-  const li = document.createElement('li');
-  const aTag = document.createElement('a');
-  aTag.setAttribute('href', message.url);
-  aTag.setAttribute('target', '_blank');
-  aTag.innerHTML = 'My current location';
-  const newContent = document.createTextNode(
-    `${message.from}: ${formattedTime} `,
-  );
-  li.appendChild(newContent);
-  li.appendChild(aTag);
-  messages.appendChild(li);
+  const html = Mustache.render(locationTemplate.innerHTML, {
+    from: message.from,
+    createdAt: formattedTime,
+    url: message.url,
+  });
+  console.log(html);
+  messages.innerHTML = html;
+  // const li = document.createElement('li');
+  // const aTag = document.createElement('a');
+  // aTag.setAttribute('href', message.url);
+  // aTag.setAttribute('target', '_blank');
+  // aTag.innerHTML = 'My current location';
+  // const newContent = document.createTextNode(
+  //   `${message.from}: ${formattedTime} `,
+  // );
+  // li.appendChild(newContent);
+  // li.appendChild(aTag);
+  // messages.appendChild(li);
 });
 
 // jQuery('#message-form').on('submit', e => {
