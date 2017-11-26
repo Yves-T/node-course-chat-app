@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "nodemon --exec 'mocha -R nyan'",
-    "eslint-check":
-      "eslint --print-config .eslintrc | eslint-config-prettier-check"
+    "eslint-check": "eslint --print-config .eslintrc | eslint-config-prettier-check"
   },
   "engines": {
     "node": "8.8.1"
@@ -30,6 +29,7 @@
   },
   "dependencies": {
     "express": "^4.16.2",
+    "moment": "^2.19.2",
     "socket.io": "^2.0.4"
   }
 }
