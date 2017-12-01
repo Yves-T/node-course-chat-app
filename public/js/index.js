@@ -6,6 +6,59 @@ const locationBtn = document.querySelector('#send-location');
 const template = document.querySelector('#message-template');
 const locationTemplate = document.querySelector('#location-message-template');
 
+function getHeightOfElementNode(someNode) {
+  const style = window.getComputedStyle(someNode, null);
+  const heightAsString = style.getPropertyValue('height');
+  const heightAsArrayOfNumbers = heightAsString.match(/\d+/g);
+  return heightAsArrayOfNumbers ? parseInt(heightAsArrayOfNumbers[0], 10) : 0;
+}
+
+function getHeightOfTextNode(textNode) {
+  let height = 0;
+  if (document.createRange) {
+    const range = document.createRange();
+    range.selectNodeContents(textNode);
+    if (range.getBoundingClientRect) {
+      const rect = range.getBoundingClientRect();
+      if (rect) {
+        height = rect.bottom - rect.top;
+      }
+    }
+  }
+  return height;
+}
+
+function getHeight(someNode) {
+  if (someNode.nodeType === Node.TEXT_NODE) {
+    return getHeightOfTextNode(someNode);
+  }
+  return getHeightOfElementNode(someNode);
+}
+
+function scrollToBottom() {
+  // heights
+  const { clientHeight, scrollTop, scrollHeight } = messages;
+  const newMessage = document.querySelector('li:last-child');
+  const newMessageHeight = getHeight(newMessage);
+  const previousMessage = newMessage.previousSibling;
+  const previousMessageHeight = getHeight(previousMessage);
+
+  if (
+    clientHeight + scrollTop + newMessageHeight + previousMessageHeight >=
+    scrollHeight
+  ) {
+    messages.scrollTop = scrollHeight;
+  }
+}
+
+function appendMessage(html) {
+  const liElement = document.createElement('li');
+  liElement.setAttribute('class', 'message');
+  liElement.innerHTML = html;
+  messages.appendChild(liElement);
+  scrollToBottom();
+}
+
 socket.on('connect', () => {
   console.log('connected to server');
 });
@@ -21,7 +74,8 @@ socket.on('newMessage', message => {
     from: message.from,
     createdAt: formattedTime,
   });
-  messages.innerHTML = html;
+
+  appendMessage(html);
 });
 
 socket.on('newLocationMessage', message => {
@@ -31,24 +85,8 @@ socket.on('newLocationMessage', message => {
     createdAt: formattedTime,
     url: message.url,
   });
-  console.log(html);
-  messages.innerHTML = html;
-  // const li = document.createElement('li');
-  // const aTag = document.createElement('a');
-  // aTag.setAttribute('href', message.url);
-  // aTag.setAttribute('target', '_blank');
-  // aTag.innerHTML = 'My current location';
-  // const newContent = document.createTextNode(
-  //   `${message.from}: ${formattedTime} `,
-  // );
-  // li.appendChild(newContent);
-  // li.appendChild(aTag);
-  // messages.appendChild(li);
+  appendMessage(html);
 });
-
-// jQuery('#message-form').on('submit', e => {
-//   e.preventDefault();
-// });
 
 const formSubmit$ = Rx.Observable.fromEvent(form, 'submit');
 formSubmit$.subscribe(e => {
