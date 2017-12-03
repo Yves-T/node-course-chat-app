@@ -42,6 +42,10 @@ function getHeightOfTextNode(textNode) {
 }
 
 function getHeight(someNode) {
+  if (!someNode) {
+    return 0;
+  }
+
   if (someNode.nodeType === Node.TEXT_NODE) {
     return getHeightOfTextNode(someNode);
   }
@@ -137,7 +141,6 @@ formSubmit$.subscribe(e => {
   socket.emit(
     'createMessage',
     {
-      from: 'User',
       text: inputMessage.value,
     },
     () => {
